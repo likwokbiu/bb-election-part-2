@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
       input2.name = "id";
       input2.value = responseData.candidates[i].id;
       var li = document.createElement("li");
-      li.innerHTML = responseData.candidates[i].name + " has " + responseData.candidates[i].votes + " votes.";
+      li.innerText = responseData.candidates[i].name + " has " + responseData.candidates[i].votes + " votes.";
       form.appendChild(input1);
       form.appendChild(input2);
       li.appendChild(form);
@@ -25,21 +25,34 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   });
 
-  // var getSubmit = document.querySelector('#election_results');
-  // getSubmit.addEventListener('click', function(e) {
-  //   if(e.target.type ==='submit') {
-  //     e.preventDefault();
-  //     console.log("Default action stopped");
-  //     console.log(e.target);
-  //     $.ajax({
-  //       url: form.getAttribute("action"),
-  //       method: form.getAttribute("method"),
-  //       data: $(form).serialize(),
-  //       dataType: "html"
-  //     }).done(function(data) {
-  //       console.log("Success");
-  //     });
-  //   };
-  // });
+  var getSubmit = document.querySelector('#election_results');
+  getSubmit.addEventListener('click', function(e) {
+    if(e.target.type ==='submit') {
+      e.preventDefault();
+      var form = e.target.parentElement;
+      $.ajax({
+        url: form.getAttribute("action"),
+        method: form.getAttribute("method"),
+        data: $(form).serialize(),
+        dataType: "html"
+      }).done(function(data) {
+        console.log(data);
+      });
+    };
+  });
+
+  var getRefresh = document.querySelector('#refresh');
+  getRefresh.addEventListener('click', function() {
+    $.ajax({
+      url: 'https://bb-election-api.herokuapp.com/',
+      method: 'GET',
+      dataType: 'json'
+    }).done(function(responseData) {
+      var li = document.querySelectorAll("li");
+      for (var i = 0; i < responseData.candidates.length; i++) {
+        li[i].firstChild.data = responseData.candidates[i].name + " has " + responseData.candidates[i].votes + " votes.";
+      };
+    });
+  });
 
 });
