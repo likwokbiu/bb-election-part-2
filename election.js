@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
 
   $.ajax({
     url: 'https://bb-election-api.herokuapp.com/',
@@ -7,12 +7,39 @@ document.addEventListener("DOMContentLoaded", function() {
   }).done(function(responseData) {
     var ul = document.getElementById('election_results');
     for (var i = 0; i < responseData.candidates.length; i++) {
-      console.log(responseData.candidates[i]);
-      var form = '<form  action="https://bb-election-api.herokuapp.com/vote?id=' + responseData.candidates[i].id +'" method="POST"><input type="submit"></form>';
+      var form = document.createElement("form");
+      form.action = "https://bb-election-api.herokuapp.com/vote";
+      form.method = "POST";
+      var input1 = document.createElement("input");
+      input1.type = "submit";
+      var input2 = document.createElement("input");
+      input2.type = "hidden";
+      input2.name = "id";
+      input2.value = responseData.candidates[i].id;
       var li = document.createElement("li");
-      li.innerHTML = responseData.candidates[i].name + " has " + responseData.candidates[i].votes + " votes." + form;
+      li.innerHTML = responseData.candidates[i].name + " has " + responseData.candidates[i].votes + " votes.";
+      form.appendChild(input1);
+      form.appendChild(input2);
+      li.appendChild(form);
       ul.appendChild(li);
     };
   });
+
+  // var getSubmit = document.querySelector('#election_results');
+  // getSubmit.addEventListener('click', function(e) {
+  //   if(e.target.type ==='submit') {
+  //     e.preventDefault();
+  //     console.log("Default action stopped");
+  //     console.log(e.target);
+  //     $.ajax({
+  //       url: form.getAttribute("action"),
+  //       method: form.getAttribute("method"),
+  //       data: $(form).serialize(),
+  //       dataType: "html"
+  //     }).done(function(data) {
+  //       console.log("Success");
+  //     });
+  //   };
+  // });
 
 });
